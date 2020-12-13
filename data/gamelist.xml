@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<gameList>
+  <folder>
+    <path>/home/pi/RetroPie/roms/scummvm/Loom Enhanced</path>
+    <name>Loom Enhanced</name>
+    <thumbnail />
+    <image />
+    <marquee />
+    <video />
+    <rating />
+    <desc />
+    <releasedate />
+    <developer />
+    <publisher />
+    <genre />
+    <players />
+  </folder>
+  <folder>
+    <path>/home/pi/RetroPie/roms/scummvm/The Secret of Monkey Island (CD DOS VGA)</path>
+    <name>The Secret of Monkey Island (CD DOS VGA)</name>
+    <thumbnail />
+    <image />
+    <marquee />
+    <video />
+    <rating />
+    <desc />
+    <releasedate />
+    <developer />
+    <publisher />
+    <genre />
+    <players />
+  </folder>
+  <folder>
+    <path>/home/pi/RetroPie/roms/scummvm/The Dig (CD DOS)</path>
+    <name>The Dig (CD DOS)</name>
+    <thumbnail />
+    <image />
+    <marquee />
+    <video />
+    <rating />
+    <desc />
+    <releasedate />
+    <developer />
+    <publisher />
+    <genre />
+    <players />
+  </folder>
+</gameList>
