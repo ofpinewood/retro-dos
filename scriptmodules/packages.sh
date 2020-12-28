@@ -12,7 +12,7 @@
 
 # Ref: https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/packages.sh
 
-__configModules=" autostart splashscreen bootscreen consolefont skyscraper rdscraper "
+__configModules=" autostart splashscreen bootscreen console-font skyscraper rdscraper "
 __emulatorModules=" scummvm scummvm-sdl1 dosbox dosbox-sdl2 "
 __gamesModules=" scummvm-games dosbox-games "
 

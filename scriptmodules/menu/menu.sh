@@ -37,9 +37,9 @@ function depends_menu() {
 function update_script_menu()
 {
     cls
-    chown -R $user:$user "$scriptdir"
+    chown -R $user:$user "$rdscriptdir"
     printHeading "Fetching latest version of the RetroDos script."
-    pushd "$scriptdir" >/dev/null
+    pushd "$rdscriptdir" >/dev/null
     if [[ ! -d ".git" ]]; then
         printMsgs "dialog" "Cannot find directory '.git'. Please clone the RetroDos script via 'git clone https://github.com/ofpinewood/retro-dos.git'"
         popd >/dev/null
@@ -85,7 +85,7 @@ function update_packages_gui_menu() {
         dialog --defaultno --yesno "Are you sure you want to update installed packages?" 22 76 2>&1 >/dev/tty || return 1
         update_script_menu || return 1
         # restart at post_update and then call "update_packages_gui_menu update" afterwards
-        exec "$scriptdir/retrodos_packages.sh" menu post_update update_packages_gui_menu update
+        exec "$rdscriptdir/retrodos_packages.sh" menu post_update update_packages_gui_menu update
     fi
 
     local update_os=0
@@ -155,7 +155,7 @@ function menu_gui_config() {
             U)
                 dialog --defaultno --yesno "Are you sure you want to update the RetroDos script?" 22 76 2>&1 >/dev/tty || continue
                 if update_script_menu; then
-                    exec "$scriptdir/retrodos_packages.sh" menu post_update gui_menu
+                    exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
                 fi
                 ;;
             *)

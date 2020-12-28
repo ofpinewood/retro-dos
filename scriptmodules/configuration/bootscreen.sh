@@ -22,7 +22,7 @@ function depends_bootscreen() {
 }
 
 function default_bootscreen() {
-    echo "$rdscriptdir/splashscreens/msdos-1024x768.gif" >/etc/splashscreen.list
+    echo "$rdscriptdir/splashscreens/msdos-1024x768-loading.png" >/etc/splashscreen.list
 }
 
 function set_bootscreen() {
