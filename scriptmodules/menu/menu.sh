@@ -127,6 +127,12 @@ function menu_gui_config() {
         done
 
         for idx in "${__mod_idx[@]}"; do
+            if rd_isRpConfigModule "$idx"; then
+                options+=("$idx" "${__mod_id[$idx]}" "$idx ${__mod_desc[$idx]}")
+            fi
+        done
+
+        for idx in "${__mod_idx[@]}"; do
             if rd_isEmulatorModule "$idx"; then
                 options+=("$idx" "${__mod_id[$idx]}" "$idx ${__mod_desc[$idx]}")
             fi

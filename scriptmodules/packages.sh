@@ -12,7 +12,8 @@
 
 # Ref: https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/packages.sh
 
-__configModules=" autostart splashscreen bootscreen console-font skyscraper rdscraper "
+__configModules=" bootscreen msdosfont rdscraper "
+__rpConfigModules=" autostart splashscreen consolefont skyscraper "
 __emulatorModules=" scummvm scummvm-sdl1 dosbox dosbox-sdl2 "
 __gamesModules=" scummvm-games dosbox-games "
 
@@ -48,6 +49,15 @@ function rd_isConfigModule() {
     local md_idx="$1"
 
     if [[ "$__configModules" == *" ${__mod_id[$md_idx]} "* ]]; then
+        return 0
+    fi
+    return 1
+}
+
+function rd_isRpConfigModule() {
+    local md_idx="$1"
+
+    if [[ "$__rpConfigModules" == *" ${__mod_id[$md_idx]} "* ]]; then
         return 0
     fi
     return 1

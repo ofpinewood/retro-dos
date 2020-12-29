@@ -9,12 +9,19 @@
 # at https://raw.githubusercontent.com/RetroPie/RetroPie-Setup/master/LICENSE.md
 #
 
-rp_module_id="console-font"
+rp_module_id="msdosfont"
 rp_module_desc="Configure default console font size/type"
 rp_module_section="config"
 rp_module_flags="!x11"
 
-function set_consolefont() {
+function install_msdosfont() {
+    # sudo mkdir /usr/share/fonts/truetype/newfonts
+    mkdir -p "/usr/share/fonts/truetype/msdos"
+    cp "$rdscriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf"
+    cp "$rdscriptdir/fonts/LessPerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/LessPerfectDOSVGA.ttf"
+}
+
+function set_msdosfont() {
     iniConfig "=" '"' "/etc/default/console-setup"
     iniSet "FONTFACE" "$1"
     iniSet "FONTSIZE" "$2"
@@ -23,7 +30,7 @@ function set_consolefont() {
     [[ "$(tty | egrep '/dev/tty[1-6]')" == "" ]] && setupcon -f --force
 }
 
-function check_consolefont() {
+function check_msdosfont() {
     local fontface
     local fontsize
 
@@ -35,44 +42,31 @@ function check_consolefont() {
     echo "$fontface" "$fontsize"
 }
 
-function gui_consolefont() {
+function gui_msdosfont() {
     local cmd
     local options
     local choice
 
     cmd=(dialog --backtitle "$__backtitle" --menu "Choose the desired console font configuration: \n(Current configuration: $(check_consolefont))" 22 86 16)
+
     options=(
-        1 "Large (VGA 16x32)"
-        2 "Large (TerminusBold 16x32)"
-        3 "Medium (VGA 16x28)"
-        4 "Medium (TerminusBold 14x28)"
-        5 "Small (Fixed 8x16)"
-        6 "Smaller (VGA 8x8)"
+        1 "More Perfect DOS VGA (VGA 8x16)"
+        2 "Less Perfect DOS VGA (VGA 8x16)"
         D "Default (Kernel font 8x16 - Restart needed)"
     )
+
     choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
-                set_consolefont "VGA" "16x32"
+                set_msdosfont "MorePerfectDOSVGA" "8x16"
                 ;;
             2)
-                set_consolefont "TerminusBold" "16x32"
-                ;;
-            3)
-                set_consolefont "VGA" "16x28"
-                ;;
-            4)
-                set_consolefont "TerminusBold" "14x28"
-                ;;
-            5)
-                set_consolefont "Fixed" "8x16"
-                ;;
-            6)
-                set_consolefont "VGA" "8x8"
+                set_msdosfont "LessPerfectDOSVGA" "8x16"
                 ;;
             D)
-                set_consolefont "" ""
+                set_msdosfont "" ""
                 ;;
         esac
         if [[ "$choice" == "D" ]]; then
