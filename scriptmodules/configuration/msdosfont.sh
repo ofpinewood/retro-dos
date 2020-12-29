@@ -14,7 +14,10 @@ rp_module_desc="Configure default console font size/type"
 rp_module_section="config"
 rp_module_flags="!x11"
 
-function install_msdosfont() {
+function depends_msdosfont() {
+    # if [[ "$md_mode" == "install" ]]; then
+    #     getDepends alsa-utils
+    # fi
     # sudo mkdir /usr/share/fonts/truetype/newfonts
     mkdir -p "/usr/share/fonts/truetype/msdos"
     cp "$rdscriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf"
