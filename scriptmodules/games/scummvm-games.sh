@@ -12,7 +12,7 @@
 
 rp_module_id="scummvmgames"
 rp_module_desc="ScummVM Games"
-rp_module_section="main"
+rp_module_section="games"
 
 scummvmgames_romdir="$romdir/scummvm/"
 #scummvmgames_romdir="$rdscriptdir/data/roms/scummvm/"

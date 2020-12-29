@@ -13,7 +13,7 @@
 rp_module_id="bootscreen"
 rp_module_desc="Configure the RetroDos splashscreen."
 rp_module_section="config"
-rp_module_flags="noinstclean !all rpi !osmc !xbian !aarch64"
+#rp_module_flags="noinstclean !all rpi !osmc !xbian !aarch64"
 
 function depends_bootscreen() {
     local params=(insserv)

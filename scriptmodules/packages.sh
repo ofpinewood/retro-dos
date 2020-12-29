@@ -12,10 +12,7 @@
 
 # Ref: https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/packages.sh
 
-__config_modules=" bootscreen msdosfont rdscraper "
-__rpconfig_modules=" autostart splashscreen consolefont skyscraper "
-__emulator_modules=" scummvm scummvm-sdl1 dosbox dosbox-sdl2 "
-__games_modules=" scummvmgames dosboxgames "
+__sections[games]="games"
 
 function rd_registerModuleDir() {
     local module_idx="$1"
@@ -39,46 +36,13 @@ function rd_registerAllModules() {
     rp_registerModuleDir 100 "emulators"
     rp_registerModuleDir 200 "libretrocores"
     rp_registerModuleDir 300 "ports"
+
+    rd_registerModuleDir 700 "menu"
+    rd_registerModuleDir 730 "config"
+    rd_registerModuleDir 760 "games"
+
     rp_registerModuleDir 800 "supplementary"
     rp_registerModuleDir 900 "admin"
-    rd_registerModuleDir 1000 "configuration"
-    rd_registerModuleDir 1100 "menu"
-}
-
-function rd_isConfigModule() {
-    local md_idx="$1"
-
-    if [[ "$__config_modules" == *" ${__mod_id[$md_idx]} "* ]]; then
-        return 0
-    fi
-    return 1
-}
-
-function rd_isRpConfigModule() {
-    local md_idx="$1"
-
-    if [[ "$__rpconfig_modules" == *" ${__mod_id[$md_idx]} "* ]]; then
-        return 0
-    fi
-    return 1
-}
-
-function rd_isEmulatorModule() {
-    local md_idx="$1"
-
-    if [[ "$__emulator_modules" == *" ${__mod_id[$md_idx]} "* ]]; then
-        return 0
-    fi
-    return 1
-}
-
-function rd_isGamesModule() {
-    local md_idx="$1"
-
-    if [[ "$__games_modules" == *" ${__mod_id[$md_idx]} "* ]]; then
-        return 0
-    fi
-    return 1
 }
 
 function cls()
