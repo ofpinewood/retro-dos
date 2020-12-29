@@ -10,25 +10,62 @@
 # License:        MIT License (https://github.com/ofpinewood/retro-dos/master/LICENSE.md)
 #
 
-rp_module_id="scummvm-games"
+rp_module_id="scummvmgames"
 rp_module_desc="ScummVM Games"
 rp_module_section="main"
 
-function gui_scummvm-games() {
-    # local gamelist="$configdir/all/emulationstation/gamelists/scummvm/gamelist.xml"
-    # local gamelist="$rdscriptdir/data/gamelist.xml"
-    # local text=$(<$rdscriptdir/data/gamelist.xml)
+scummvmgames_romdir="$romdir/scummvm/"
+#scummvmgames_romdir="$rdscriptdir/data/roms/scummvm/"
 
-    # echo $text
+function depends_scummvmgames()
+{
+    scummvmgames_idx=()
+    scummvmgames_shortname=()
+    scummvmgames_name=()
+    scummvmgames_path=()
 
-    local cmd=(dialog --backtitle "$__backtitle" --title "ScummVM Games" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "Start a game $text" 22 76 16)
+    local idx=0
+    while IFS= read -d $'\0' -r path ; do
+        local folder="${path##*/}"
+        local shortname=$(<"$path/$folder.svm")
+        if [ -n "$shortname" ]; then
+            scummvmgames_idx+=("$idx")
+            scummvmgames_shortname["$idx"]="$shortname"
+            scummvmgames_name["$idx"]="$folder"
+            scummvmgames_path["$idx"]="$path"
+            ((idx++))
+        fi
+    done < <(find "$scummvmgames_romdir" -maxdepth 1 -mindepth 1 -type d -print0)
+}
 
+function run_game_scummvmgames()
+{
+    local shortname="$1"
+
+    local name
+    local path
+    local idx
+    for idx in "${scummvmgames_idx[@]}"; do
+        if [[ "${scummvmgames_shortname[$idx]}" == $shortname ]]; then
+            name="${scummvmgames_name[$idx]}"
+            path="${scummvmgames_path[$idx]}"
+        fi
+    done
+
+    # ref: https://wiki.scummvm.org/index.php/User_Manual/Appendix:_Command_line_options
+    /opt/retropie/emulators/scummvm/bin/scummvm --fullscreen --aspect-ratio --extrapath="/opt/retropie/emulators/scummvm/extra" --path="$path" $shortname
+}
+
+function gui_scummvmgames() {
     while true; do
-        local options=(
-            atlantis "Indiana Jones and the Fate of Atlantis" "Indiana Jones and the Fate of Atlantis"
+        local options=()
 
-            monkey "The Secret of Monkey Island" "The Secret of Monkey Island"
-        )
+        local idx
+        for idx in "${scummvmgames_idx[@]}"; do
+            options+=("${scummvmgames_shortname[$idx]}" "${scummvmgames_name[$idx]}" "${scummvmgames_shortname[$idx]} ${scummvmgames_name[$idx]}")
+        done
+
+        local cmd=(dialog --backtitle "$__backtitle" --title "ScummVM Games" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "Start a game" 22 76 16)
 
         local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         [[ -z "$choice" ]] && break
@@ -44,19 +81,14 @@ function gui_scummvm-games() {
 
         default="$choice"
 
-        case "$choice" in
-            # atlantis)
-            #     printMsgs "dialog" "Indiana Jones and the Fate of Atlantis"
-            #     ;;
-            *)
-                game="$choice"
-                pushd "/home/pi/RetroPie/roms/scummvm" >/dev/null
-                /opt/retropie/emulators/scummvm/bin/scummvm --fullscreen --joystick=0 --extrapath="/opt/retropie/emulators/scummvm/extra" $game
-                while read id desc; do
-                    echo "$desc" > "/home/pi/RetroPie/roms/scummvm/$id.svm"
-                done < <(/opt/retropie/emulators/scummvm/bin/scummvm --list-targets | tail -n +3)
-                popd >/dev/null
-                ;;
-        esac
+        if [[ -n "$choice" ]]; then
+            case "$choice" in
+                *)
+                    run_game_scummvmgames "$choice"
+                    ;;
+            esac
+        else
+            break
+        fi
     done
 }

@@ -16,6 +16,55 @@ rp_module_id="menu"
 rp_module_desc="RetroDos"
 rp_module_section=""
 
+function _menu_gzip_log() {
+    setsid tee >(setsid gzip --stdout >"$1")
+}
+
+function rps_logInit() {
+    if [[ ! -d "$__logdir" ]]; then
+        if mkdir -p "$__logdir"; then
+            chown $user:$user "$__logdir"
+        else
+            fatalError "Couldn't make directory $__logdir"
+        fi
+    fi
+    local now=$(date +'%Y-%m-%d_%H%M%S')
+    logfilename="$__logdir/rps_$now.log.gz"
+    touch "$logfilename"
+    chown $user:$user "$logfilename"
+    time_start=$(date +"%s")
+}
+
+function rps_logStart() {
+    echo -e "Log started at: $(date -d @$time_start)\n"
+    echo "RetroPie-Setup version: $__version ($(git -C "$scriptdir" log -1 --pretty=format:%h))"
+    echo "System: $__platform ($__platform_arch) - $__os_desc - $(uname -a)"
+}
+
+function rps_logEnd() {
+    time_end=$(date +"%s")
+    echo
+    echo "Log ended at: $(date -d @$time_end)"
+    date_total=$((time_end-time_start))
+    local hours=$((date_total / 60 / 60 % 24))
+    local mins=$((date_total / 60 % 60))
+    local secs=$((date_total % 60))
+    echo "Total running time: $hours hours, $mins mins, $secs secs"
+}
+
+function rps_printInfo() {
+    reset
+    if [[ ${#__ERRMSGS[@]} -gt 0 ]]; then
+        printMsgs "dialog" "${__ERRMSGS[@]}"
+        printMsgs "dialog" "Please see $1 for more in depth information regarding the errors."
+    fi
+    if [[ ${#__INFMSGS[@]} -gt 0 ]]; then
+        printMsgs "dialog" "${__INFMSGS[@]}"
+    fi
+    __ERRMSGS=()
+    __INFMSGS=()
+}
+
 function depends_menu() {
     # make sure user has the correct group permissions
     if ! isPlatform "x11"; then
@@ -63,6 +112,17 @@ function post_update_menu() {
     echo "$__version" >"$rootdir/VERSION"
 
     cls
+    local logfilename
+    rps_logInit
+    {
+        rps_logStart
+        # run _update_hook_id functions - eg to fix up modules for retropie-setup 4.x install detection
+        printHeading "Running post update hooks"
+        rp_updateHooks
+        rps_logEnd
+    } &> >(_menu_gzip_log "$logfilename")
+    rps_printInfo "$logfilename"
+
     printMsgs "dialog" "NOTICE: The RetroDos script is available from https://github.com/ofpinewood/retro-dos."
 
     # return to set return function
@@ -92,6 +152,17 @@ function update_packages_gui_menu() {
     dialog --yesno "Would you like to update the underlying OS packages (eg kernel etc) ?" 22 76 2>&1 >/dev/tty && update_os=1
 
     cls
+
+    local logfilename
+    rps_logInit
+    {
+        rps_logStart
+        [[ "$update_os" -eq 1 ]] && rp_callModule raspbiantools apt_upgrade
+        update_packages_menu
+        rps_logEnd
+    } &> >(_menu_gzip_log "$logfilename")
+    rps_printInfo "$logfilename"
+
     printMsgs "dialog" "Installed packages have been updated."
     menu_gui_config
 }
@@ -165,13 +236,20 @@ function menu_gui_config() {
                 fi
                 ;;
             *)
-                if fnExists "gui_${__mod_id[choice]}"; then
-                    rp_callModule "$choice" depends
-                    rp_callModule "$choice" gui
-                else
-                    rp_callModule "$idx" clean
-                    rp_callModule "$choice"
-                fi
+                local logfilename
+                rps_logInit
+                {
+                    rps_logStart
+                    if fnExists "gui_${__mod_id[choice]}"; then
+                        rp_callModule "$choice" depends
+                        rp_callModule "$choice" gui
+                    else
+                        rp_callModule "$idx" clean
+                        rp_callModule "$choice"
+                    fi
+                    rps_logEnd
+                } &> >(_menu_gzip_log "$logfilename")
+                rps_printInfo "$logfilename"
                 ;;
         esac
     done
@@ -219,13 +297,20 @@ function gui_menu() {
                 reboot_menu
                 ;;
             *)
-                if fnExists "gui_${__mod_id[choice]}"; then
-                    rp_callModule "$choice" depends
-                    rp_callModule "$choice" gui
-                else
-                    rp_callModule "$idx" clean
-                    rp_callModule "$choice"
-                fi
+                local logfilename
+                rps_logInit
+                {
+                    rps_logStart
+                    if fnExists "gui_${__mod_id[choice]}"; then
+                        rp_callModule "$choice" depends
+                        rp_callModule "$choice" gui
+                    else
+                        rp_callModule "$idx" clean
+                        rp_callModule "$choice"
+                    fi
+                    rps_logEnd
+                } &> >(_menu_gzip_log "$logfilename")
+                rps_printInfo "$logfilename"
                 ;;
         esac
     done

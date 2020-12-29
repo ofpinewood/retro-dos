@@ -39,7 +39,7 @@ scriptdir="$(cd "$scriptdir" && pwd)"
 rdscriptdir="$(dirname "$0")"
 rdscriptdir="$(cd "$rdscriptdir" && pwd)"
 
-__logdir="$scriptdir/logs"
+__logdir="$rdscriptdir/logs"
 __tmpdir="$scriptdir/tmp"
 __builddir="$__tmpdir/build"
 __swapdir="$__tmpdir"

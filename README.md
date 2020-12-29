@@ -39,27 +39,11 @@ sudo ./retrodos.sh
 
 When you first run the script it may install some additional packages that are needed.
 
-> NOTE: When you get `command not found` when executing the script you might be missing the execute permissions on the script files (`*.sh`).
-> ``` bash
-> cd retro-dos
-> find . -type f -iname "*.sh" -exec chmod u+x {} \;
-> ```
-> `-type f`: Normal files only (skip directories, symlinks, named pipes and sockets, and the special files found in /dev)
-> `-iname`: Ignore case in the name
-> `"*.sh"`: Globbing, telling the `find` command to search for files with ".sh" extension
-> `-exec chmod +x {}`: This tells the `find` command to carry out a `chmod` command on each found file. Making each executable
-> `\;:` Indicating end of command
-
 ## Development
 
 References:
 - [RetroPie](https://retropie.org.uk/)
 - [Linux Shell Scripting Tutorial](https://bash.cyberciti.biz/guide)
-
-RetroPie-Setup script:
-- [esthemes.sh](https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/supplementary/esthemes.sh)
-- [asplashscreen.sh](https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/supplementary/splashscreen/asplashscreen.sh)
-- [scraper.sh](https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/supplementary/scraper.sh)
 
 ### Windows development
 Windows Subsystem for Linux is recommended to develop on Windows.
