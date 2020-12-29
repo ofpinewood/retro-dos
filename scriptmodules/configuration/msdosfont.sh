@@ -16,7 +16,8 @@ rp_module_flags="!x11"
 
 function depends_msdosfont() {
     mkdir -p "/usr/share/fonts/truetype/msdos" >/dev/null
-    cp "$rdscriptdir/fonts/*.ttf" "/usr/share/fonts/truetype/msdos/" >/dev/null
+    cp "$rdscriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf" >/dev/null
+    cp "$rdscriptdir/fonts/LessPerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/LessPerfectDOSVGA.ttf" >/dev/null
     fc-cache -f -v >/dev/null
 }
 
