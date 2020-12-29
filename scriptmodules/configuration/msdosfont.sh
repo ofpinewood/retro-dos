@@ -18,6 +18,7 @@ function depends_msdosfont() {
     mkdir -p "/usr/share/fonts/truetype/msdos" >/dev/null
     cp "$rdscriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf" >/dev/null
     cp "$rdscriptdir/fonts/LessPerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/LessPerfectDOSVGA.ttf" >/dev/null
+    cp "$rdscriptdir/fonts/Lobster-Regular.ttf" "/usr/share/fonts/truetype/msdos/Lobster-Regular.ttf" >/dev/null
     fc-cache -f -v >/dev/null
 }
 
@@ -52,6 +53,7 @@ function gui_msdosfont() {
     options=(
         1 "More Perfect DOS VGA (VGA 8x16)"
         2 "Less Perfect DOS VGA (VGA 8x16)"
+        3 "Lobster-Regular"
         D "Default (Kernel font 8x16 - Restart needed)"
     )
 
@@ -64,6 +66,9 @@ function gui_msdosfont() {
                 ;;
             2)
                 set_msdosfont "Less Perfect DOS VGA" "8x16"
+                ;;
+            3)
+                set_msdosfont "Lobster-Regular" "8x16"
                 ;;
             D)
                 set_msdosfont "" ""
