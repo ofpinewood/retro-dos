@@ -20,8 +20,12 @@ function depends_msdosfont() {
     # fi
     # sudo mkdir /usr/share/fonts/truetype/newfonts
     mkdir -p "/usr/share/fonts/truetype/msdos"
-    cp "$rdscriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf"
-    cp "$rdscriptdir/fonts/LessPerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/LessPerfectDOSVGA.ttf"
+    cp "$rdscriptdir/fonts/*.ttf" "/usr/share/fonts/truetype/msdos/"
+    fc-cache -f -v
+
+    local fonts=$(fc-list)
+
+    printMsgs "dialog" "Installed fonts: '$fonts'"
 }
 
 function set_msdosfont() {
