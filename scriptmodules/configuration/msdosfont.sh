@@ -15,17 +15,9 @@ rp_module_section="config"
 rp_module_flags="!x11"
 
 function depends_msdosfont() {
-    # if [[ "$md_mode" == "install" ]]; then
-    #     getDepends alsa-utils
-    # fi
-    # sudo mkdir /usr/share/fonts/truetype/newfonts
-    mkdir -p "/usr/share/fonts/truetype/msdos"
-    cp "$rdscriptdir/fonts/*.ttf" "/usr/share/fonts/truetype/msdos/"
-    fc-cache -f -v
-
-    local fonts=$(fc-list)
-
-    printMsgs "dialog" "Installed fonts: '$fonts'"
+    mkdir -p "/usr/share/fonts/truetype/msdos" >/dev/null
+    cp "$rdscriptdir/fonts/*.ttf" "/usr/share/fonts/truetype/msdos/" >/dev/null
+    fc-cache -f -v >/dev/null
 }
 
 function set_msdosfont() {
@@ -67,10 +59,10 @@ function gui_msdosfont() {
     if [[ -n "$choice" ]]; then
         case "$choice" in
             1)
-                set_msdosfont "MorePerfectDOSVGA" "8x16"
+                set_msdosfont "More Perfect DOS VGA" "8x16"
                 ;;
             2)
-                set_msdosfont "LessPerfectDOSVGA" "8x16"
+                set_msdosfont "Less Perfect DOS VGA" "8x16"
                 ;;
             D)
                 set_msdosfont "" ""
