@@ -51,10 +51,12 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 __title="RetroDos"
-__version="0.0.1-alpha"
-__versionYear="2020"
+__version=$(git describe --tags --abbrev=0)
+__version_commit=$(git -C "$rdscriptdir" log -1 --pretty=format:%h)
+__version_branch=$(git branch --show-current)
+__version_year=$(git -C "$rdscriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
 __author="Of Pine Wood"
-__backtitle="$__title (c) $__versionYear $__author $__version"
+__backtitle="$__title (c) $__version_year $__author $__version"
 
 # using the RetroPie-Setup scriptmodules
 source "$scriptdir/scriptmodules/system.sh"

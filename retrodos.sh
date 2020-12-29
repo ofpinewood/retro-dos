@@ -17,4 +17,3 @@ rdscriptdir="$(dirname "$0")"
 rdscriptdir="$(cd "$rdscriptdir" && pwd)"
 
 "$rdscriptdir/retrodos_packages.sh" menu gui
-#"/home/wsl2/RetroPie-Setup/retropie_packages.sh" setup gui

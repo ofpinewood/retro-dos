@@ -37,7 +37,7 @@ function rps_logInit() {
 
 function rps_logStart() {
     echo -e "Log started at: $(date -d @$time_start)\n"
-    echo "RetroPie-Setup version: $__version ($(git -C "$scriptdir" log -1 --pretty=format:%h))"
+    echo "RetroPie-Setup version: $__version ($__version_commit)"
     echo "System: $__platform ($__platform_arch) - $__os_desc - $(uname -a)"
 }
 
@@ -106,6 +106,29 @@ function update_script_menu()
     return 0
 }
 
+function update_development_script_menu()
+{
+    cls
+    chown -R $user:$user "$rdscriptdir"
+    printHeading "Fetching latest development version of the RetroDos script."
+    pushd "$rdscriptdir" >/dev/null
+    if [[ ! -d ".git" ]]; then
+        printMsgs "dialog" "Cannot find directory '.git'. Please clone the RetroDos script via 'git clone --single-branch --branch develop https://github.com/ofpinewood/retro-dos.git'"
+        popd >/dev/null
+        return 1
+    fi
+    local error
+    if ! error=$(su $user -c "git pull origin develop 2>&1 >/dev/null"); then
+        printMsgs "dialog" "Update failed:\n\n$error"
+        popd >/dev/null
+        return 1
+    fi
+    popd >/dev/null
+
+    printMsgs "dialog" "Fetched the latest development version of the RetroDos script."
+    return 0
+}
+
 function post_update_menu() {
     local return_func=("$@")
 
@@ -171,71 +194,6 @@ function reboot_menu()
 {
     cls
     reboot
-}
-
-function config_gui_menu() {
-    local default
-
-    while true; do
-        local options=(
-            A "Update All" "A Updates RetroDos script and all currently installed packages. Will also allow to update OS packages. If binaries are available they will be used, otherwise packages will be built from source."
-
-            U "Update RetroDos script"
-            "U Update this RetroDos script. This will update this main management script only, but will not update any software packages."
-        )
-
-        local idx
-        for idx in "${__mod_idx[@]}"; do
-            # show all configuration modules and any installed packages with a gui function
-            if [[ "${__mod_section[idx]}" == "config" ]] || rp_isInstalled "$idx" && fnExists "gui_${__mod_id[idx]}"; then
-                options+=("$idx" "${__mod_desc[$idx]}" "$idx ${__mod_desc[$idx]} (${__mod_id[$idx]})")
-            fi
-        done
-
-        local cmd=(dialog --backtitle "$__backtitle" --title "Configuration / Tools" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "This menu contains configuration and tools for RetroDos and from the RetroPie-Setup script." 22 76 16)
-
-        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
-        [[ -z "$choice" ]] && break
-        if [[ "${choice[@]:0:4}" == "HELP" ]]; then
-            choice="${choice[@]:5}"
-            default="${choice/%\ */}"
-            choice="${choice#* }"
-            printMsgs "dialog" "$choice"
-            continue
-        fi
-
-        [[ -z "$choice" ]] && break
-
-        default="$choice"
-
-        case "$choice" in
-            A)
-                update_packages_gui_menu
-                ;;
-            U)
-                dialog --defaultno --yesno "Are you sure you want to update the RetroDos script?" 22 76 2>&1 >/dev/tty || continue
-                if update_script_menu; then
-                    exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
-                fi
-                ;;
-            *)
-                local logfilename
-                rps_logInit
-                {
-                    rps_logStart
-                    if fnExists "gui_${__mod_id[choice]}"; then
-                        rp_callModule "$choice" depends
-                        rp_callModule "$choice" gui
-                    else
-                        rp_callModule "$idx" clean
-                        rp_callModule "$choice"
-                    fi
-                    rps_logEnd
-                } &> >(_menu_gzip_log "$logfilename")
-                rps_printInfo "$logfilename"
-                ;;
-        esac
-    done
 }
 
 function package_menu() {
@@ -521,6 +479,56 @@ function packages_gui_menu() {
     done
 }
 
+function config_gui_menu() {
+    local default
+
+    while true; do
+        local options=()
+        local idx
+        for idx in "${__mod_idx[@]}"; do
+            # show all configuration modules and any installed packages with a gui function
+            if [[ "${__mod_section[idx]}" == "config" ]] || rp_isInstalled "$idx" && fnExists "gui_${__mod_id[idx]}"; then
+                options+=("$idx" "${__mod_desc[$idx]}" "$idx ${__mod_desc[$idx]} (${__mod_id[$idx]})")
+            fi
+        done
+
+        local cmd=(dialog --backtitle "$__backtitle" --title "Configuration / Tools" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "This menu contains configuration and tools for RetroDos and from the RetroPie-Setup script." 22 76 16)
+
+        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+        [[ -z "$choice" ]] && break
+        if [[ "${choice[@]:0:4}" == "HELP" ]]; then
+            choice="${choice[@]:5}"
+            default="${choice/%\ */}"
+            choice="${choice#* }"
+            printMsgs "dialog" "$choice"
+            continue
+        fi
+
+        [[ -z "$choice" ]] && break
+
+        default="$choice"
+
+        case "$choice" in
+            *)
+                local logfilename
+                rps_logInit
+                {
+                    rps_logStart
+                    if fnExists "gui_${__mod_id[choice]}"; then
+                        rp_callModule "$choice" depends
+                        rp_callModule "$choice" gui
+                    else
+                        rp_callModule "$idx" clean
+                        rp_callModule "$choice"
+                    fi
+                    rps_logEnd
+                } &> >(_menu_gzip_log "$logfilename")
+                rps_printInfo "$logfilename"
+                ;;
+        esac
+    done
+}
+
 # retrodos main menu
 function gui_menu() {
     depends_menu
@@ -539,9 +547,12 @@ function gui_menu() {
 
         options+=(C "Configuration / Tools" "C Configuration and tools.")
         options+=(P "Manage packages" "P Install/Remove and Configure the various components of RetroPie, including emulators, ports, and controller drivers.")
+        options+=(A "Update All" "A Updates RetroDos script and all currently installed packages. Will also allow to update OS packages. If binaries are available they will be used, otherwise packages will be built from source.")
+        options+=(U "Update RetroDos script" "U Update RetroDos script. This will update this main management script only, but will not update any software packages.")
+        options+=(D "Update RetroDos script (development)" "D WARNING: Development version! Update RetroDos script from the development version. This will update this main management script only, but will not update any software packages.")
         options+=(R "Perform Reboot" "R Reboot your machine.")
 
-        cmd=(dialog --backtitle "$__backtitle" --title "$__title" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version - Last Commit: $commit\nSystem: $__platform ($__platform_arch) - running on $__os_desc" 22 76 16)
+        cmd=(dialog --backtitle "$__backtitle" --title "$__title" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version ($__version_branch)\nLast Commit: $commit\nSystem: $__platform ($__platform_arch) $__os_desc" 22 76 16)
 
         choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         [[ -z "$choice" ]] && break
@@ -561,6 +572,21 @@ function gui_menu() {
                 ;;
             P)
                 packages_gui_menu
+                ;;
+            A)
+                update_packages_gui_menu
+                ;;
+            U)
+                dialog --defaultno --yesno "Are you sure you want to update the RetroDos script?" 22 76 2>&1 >/dev/tty || continue
+                if update_script_menu; then
+                    exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
+                fi
+                ;;
+            D)
+                dialog --defaultno --yesno "WARNING: Development version! Are you sure you want to update to the development version of the RetroDos script?" 22 76 2>&1 >/dev/tty || continue
+                if update_development_script_menu; then
+                    exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
+                fi
                 ;;
             R)
                 dialog --defaultno --yesno "Are you sure you want to reboot?\n\nNote that if you reboot when Emulation Station is running, you will lose any metadata changes." 22 76 2>&1 >/dev/tty || continue
