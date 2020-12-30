@@ -67,6 +67,6 @@ We accept fixes and features! Here are some resources to help you get started on
 - [More Perfect DOS VGA](http://laemeur.sdf.org/fonts) font by [Adam Moore (LÆMEUR)](http://laemeur.sdf.org/).
 
 ---
-Copyright &copy; 2019, [Of Pine Wood](http://ofpinewood.com).
+Copyright &copy; 2020, [Of Pine Wood](http://ofpinewood.com).
 Created by [Peter van den Hout](http://ofpinewood.com).
 Released under the terms of the [MIT license](https://github.com/ofpinewood/retro-dos/blob/master/LICENSE).
