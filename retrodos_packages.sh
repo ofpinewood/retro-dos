@@ -10,6 +10,9 @@
 # License:        MIT License (https://github.com/ofpinewood/retro-dos/master/LICENSE.md)
 #
 
+# set to "1" if we are in development mode
+__development=1
+
 # main retropie install location
 rootdir="/opt/retropie"
 
@@ -51,7 +54,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 __title="RetroDos"
-__version=$(git describe --tags --abbrev=0)
+__version="0.0.1-alpha"
 __version_commit=$(git -C "$rdscriptdir" log -1 --pretty=format:%h)
 __version_branch=$(git branch --show-current)
 __version_year=$(git -C "$rdscriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
