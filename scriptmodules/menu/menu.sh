@@ -95,37 +95,23 @@ function update_script_menu()
         return 1
     fi
     local error
-    if ! error=$(su $user -c "git pull 2>&1 >/dev/null"); then
-        printMsgs "dialog" "Update failed:\n\n$error"
-        popd >/dev/null
-        return 1
+    if [[ $__development == 0 ]]; then
+        if ! error=$(su $user -c "git pull 2>&1 >/dev/null"); then
+            printMsgs "dialog" "Update failed:\n\n$error"
+            popd >/dev/null
+            return 1
+        fi
+    else
+        # development branch
+        if ! error=$(su $user -c "git pull origin develop 2>&1 >/dev/null"); then
+            printMsgs "dialog" "Update failed:\n\n$error"
+            popd >/dev/null
+            return 1
+        fi
     fi
     popd >/dev/null
 
     printMsgs "dialog" "Fetched the latest version of the RetroDos script."
-    return 0
-}
-
-function update_development_script_menu()
-{
-    cls
-    chown -R $user:$user "$rdscriptdir"
-    printHeading "Fetching latest development version of the RetroDos script."
-    pushd "$rdscriptdir" >/dev/null
-    if [[ ! -d ".git" ]]; then
-        printMsgs "dialog" "Cannot find directory '.git'. Please clone the RetroDos script via 'git clone --single-branch --branch develop https://github.com/ofpinewood/retro-dos.git'"
-        popd >/dev/null
-        return 1
-    fi
-    local error
-    if ! error=$(su $user -c "git pull origin develop 2>&1 >/dev/null"); then
-        printMsgs "dialog" "Update failed:\n\n$error"
-        popd >/dev/null
-        return 1
-    fi
-    popd >/dev/null
-
-    printMsgs "dialog" "Fetched the latest development version of the RetroDos script."
     return 0
 }
 
@@ -549,7 +535,6 @@ function gui_menu() {
         options+=(P "Manage packages" "P Install/Remove and Configure the various components of RetroPie, including emulators, ports, and controller drivers.")
         options+=(A "Update All" "A Updates RetroDos script and all currently installed packages. Will also allow to update OS packages. If binaries are available they will be used, otherwise packages will be built from source.")
         options+=(U "Update RetroDos script" "U Update RetroDos script. This will update this main management script only, but will not update any software packages.")
-        options+=(D "Update RetroDos script (development)" "D WARNING: Development version! Update RetroDos script from the development version. This will update this main management script only, but will not update any software packages.")
         options+=(R "Perform Reboot" "R Reboot your machine.")
 
         cmd=(dialog --backtitle "$__backtitle" --title "$__title" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version ($__version_branch)\nLast Commit: $commit\nSystem: $__platform ($__platform_arch) $__os_desc" 22 76 16)
@@ -579,12 +564,6 @@ function gui_menu() {
             U)
                 dialog --defaultno --yesno "Are you sure you want to update the RetroDos script?" 22 76 2>&1 >/dev/tty || continue
                 if update_script_menu; then
-                    exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
-                fi
-                ;;
-            D)
-                dialog --defaultno --yesno "WARNING: Development version! Are you sure you want to update to the development version of the RetroDos script?" 22 76 2>&1 >/dev/tty || continue
-                if update_development_script_menu; then
                     exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
                 fi
                 ;;
