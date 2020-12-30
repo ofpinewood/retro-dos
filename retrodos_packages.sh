@@ -51,7 +51,8 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 __title="RetroDos"
-__version=$(git describe --tags --abbrev=0)
+__version="0.0.1-alpha"
+# __version=$(git describe --tags --always --abbrev=0)
 __version_commit=$(git -C "$rdscriptdir" log -1 --pretty=format:%h)
 __version_branch=$(git branch --show-current)
 __version_year=$(git -C "$rdscriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
