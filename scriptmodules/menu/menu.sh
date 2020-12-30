@@ -95,19 +95,10 @@ function update_script_menu()
         return 1
     fi
     local error
-    if [[ $__development == 0 ]]; then
-        if ! error=$(su $user -c "git pull 2>&1 >/dev/null"); then
-            printMsgs "dialog" "Update failed:\n\n$error"
-            popd >/dev/null
-            return 1
-        fi
-    else
-        # development branch
-        if ! error=$(su $user -c "git pull origin develop 2>&1 >/dev/null"); then
-            printMsgs "dialog" "Update failed:\n\n$error"
-            popd >/dev/null
-            return 1
-        fi
+    if ! error=$(su $user -c "git pull 2>&1 >/dev/null"); then
+        printMsgs "dialog" "Update failed:\n\n$error"
+        popd >/dev/null
+        return 1
     fi
     popd >/dev/null
 
