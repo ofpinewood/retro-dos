@@ -15,34 +15,33 @@
 __sections[games]="games"
 
 function rd_registerModuleDir() {
-    local module_idx="$1"
-    local module_dir="$2"
-    for module in $(find "$rdscriptdir/scriptmodules/$2" -maxdepth 1 -name "*.sh" | sort); do
-        rp_registerModule $module_idx "$module" "$module_dir"
-        ((module_idx++))
+    local dir="$1"
+    local module
+    for module in $(find "$rdscriptdir/scriptmodules/$dir" -maxdepth 1 -name "*.sh" | sort); do
+        rp_registerModule "$module" "$dir"
     done
 }
 
 function rd_registerAllModules() {
-    __mod_idx=()
     __mod_id=()
-    __mod_type=()
-    __mod_desc=()
-    __mod_help=()
-    __mod_licence=()
-    __mod_section=()
-    __mod_flags=()
+    declare -Ag __mod_idx=()
+    declare -Ag __mod_type=()
+    declare -Ag __mod_desc=()
+    declare -Ag __mod_help=()
+    declare -Ag __mod_licence=()
+    declare -Ag __mod_section=()
+    declare -Ag __mod_flags=()
 
-    rp_registerModuleDir 100 "emulators"
-    rp_registerModuleDir 200 "libretrocores"
-    rp_registerModuleDir 300 "ports"
+    rp_registerModuleDir "emulators"
+    rp_registerModuleDir "libretrocores"
+    rp_registerModuleDir "ports"
 
-    rd_registerModuleDir 700 "menu"
-    rd_registerModuleDir 730 "config"
-    rd_registerModuleDir 760 "games"
+    rd_registerModuleDir "menu"
+    rd_registerModuleDir "config"
+    rd_registerModuleDir "games"
 
-    rp_registerModuleDir 800 "supplementary"
-    rp_registerModuleDir 900 "admin"
+    rp_registerModuleDir "supplementary"
+    rp_registerModuleDir "admin"
 }
 
 function cls()

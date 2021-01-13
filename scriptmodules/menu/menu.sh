@@ -115,6 +115,29 @@ function update_script_menu()
     return 0
 }
 
+function update_setupscript_menu()
+{
+    cls
+    chown -R $user:$user "$scriptdir"
+    printHeading "Fetching latest version of the RetroPie Setup Script."
+    pushd "$scriptdir" >/dev/null
+    if [[ ! -d ".git" ]]; then
+        printMsgs "dialog" "Cannot find directory '.git'. Please clone the RetroPie Setup script via 'git clone https://github.com/RetroPie/RetroPie-Setup.git'"
+        popd >/dev/null
+        return 1
+    fi
+    local error
+    if ! error=$(su $user -c "git pull 2>&1 >/dev/null"); then
+        printMsgs "dialog" "Update failed:\n\n$error"
+        popd >/dev/null
+        return 1
+    fi
+    popd >/dev/null
+
+    printMsgs "dialog" "Fetched the latest version of the RetroPie Setup script."
+    return 0
+}
+
 function post_update_menu() {
     local return_func=("$@")
 
@@ -471,10 +494,10 @@ function config_gui_menu() {
     while true; do
         local options=()
         local idx
-        for idx in "${__mod_idx[@]}"; do
-            # show all configuration modules and any installed packages with a gui function
-            if [[ "${__mod_section[idx]}" == "config" ]] || rp_isInstalled "$idx" && fnExists "gui_${__mod_id[idx]}"; then
-                options+=("$idx" "${__mod_desc[$idx]}" "$idx ${__mod_desc[$idx]} (${__mod_id[$idx]})")
+
+        for id in "${__mod_id[@]}"; do
+            if [[ "${__mod_section[$id]}" == "config" ]] || rp_isInstalled "$id" && fnExists "gui_$id"; then
+                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "$id ${__mod_idx[$id]} ${__mod_desc[$id]}")
             fi
         done
 
@@ -500,12 +523,13 @@ function config_gui_menu() {
                 rps_logInit
                 {
                     rps_logStart
-                    if fnExists "gui_${__mod_id[choice]}"; then
-                        rp_callModule "$choice" depends
-                        rp_callModule "$choice" gui
+                    id="${__mod_id[$choice]}"
+                    if fnExists "gui_$id"; then
+                        rp_callModule "$id" depends
+                        rp_callModule "$id" gui
                     else
-                        rp_callModule "$idx" clean
-                        rp_callModule "$choice"
+                        rp_callModule "$id" clean
+                        rp_callModule "$id"
                     fi
                     rps_logEnd
                 } &> >(_menu_gzip_log "$logfilename")
@@ -525,16 +549,17 @@ function gui_menu() {
         local commit=$(git -C "$rdscriptdir" log -1 --pretty=format:"%cr (%h)")
         local options=()
 
-        for idx in "${__mod_idx[@]}"; do
-            if [[ "${__mod_section[idx]}" == "games" ]]; then
-                options+=("$idx" "${__mod_desc[$idx]}" "$idx ${__mod_desc[$idx]} (${__mod_id[$idx]})")
+        for id in "${__mod_id[@]}"; do
+            if [[ "${__mod_section[$id]}" == "games" ]] && fnExists "gui_$id"; then
+                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "$id ${__mod_idx[$id]} ${__mod_desc[$id]}")
             fi
         done
 
         options+=(C "Configuration / Tools" "C Configuration and tools.")
         options+=(P "Manage packages" "P Install/Remove and Configure the various components of RetroPie, including emulators, ports, and controller drivers.")
         options+=(A "Update All" "A Updates RetroDos script and all currently installed packages. Will also allow to update OS packages. If binaries are available they will be used, otherwise packages will be built from source.")
-        options+=(U "Update RetroDos script" "U Update RetroDos script. This will update this main management script only, but will not update any software packages.")
+        options+=(U "Update RetroDos script" "U Update RetroDos script. This will update this main management script only, but will not update any software packages. To update packages use the 'Update' option from the main menu, which will also update the RetroDos script.")
+        options+=(S "Update RetroPie-Setup script" "S Update this RetroPie-Setup script. This will update this main management script only, but will not update any software packages. To update packages use the 'Update' option from the main menu.")
         options+=(R "Perform Reboot" "R Reboot your machine.")
 
         cmd=(dialog --backtitle "$__backtitle" --title "$__title" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version ($__version_branch)\nLast Commit: $commit\nSystem: $__platform ($__platform_arch) $__os_desc" 22 76 16)
@@ -567,6 +592,12 @@ function gui_menu() {
                     exec "$rdscriptdir/retrodos_packages.sh" menu post_update gui_menu
                 fi
                 ;;
+            S)
+                dialog --defaultno --yesno "Are you sure you want to update the RetroPie-Setup script ?" 22 76 2>&1 >/dev/tty || continue
+                if update_setupscript_menu; then
+                    exec "$rdscriptdir/retrodos_packages.sh" setup post_update gui_menu
+                fi
+                ;;
             R)
                 dialog --defaultno --yesno "Are you sure you want to reboot?\n\nNote that if you reboot when Emulation Station is running, you will lose any metadata changes." 22 76 2>&1 >/dev/tty || continue
                 reboot_menu
@@ -576,12 +607,13 @@ function gui_menu() {
                 rps_logInit
                 {
                     rps_logStart
-                    if fnExists "gui_${__mod_id[choice]}"; then
-                        rp_callModule "$choice" depends
-                        rp_callModule "$choice" gui
+                    id="${__mod_id[$choice]}"
+                    if fnExists "gui_$id"; then
+                        rp_callModule "$id" depends
+                        rp_callModule "$id" gui
                     else
-                        rp_callModule "$idx" clean
-                        rp_callModule "$choice"
+                        rp_callModule "$id" clean
+                        rp_callModule "$id"
                     fi
                     rps_logEnd
                 } &> >(_menu_gzip_log "$logfilename")
