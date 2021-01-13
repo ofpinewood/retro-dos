@@ -10,8 +10,6 @@
 # License:        MIT License (https://github.com/ofpinewood/retro-dos/master/LICENSE.md)
 #
 
-# Ref: https://github.com/RetroPie/RetroPie-Setup/blob/master/scriptmodules/packages.sh
-
 __sections[games]="games"
 
 function rd_registerModuleDir() {
@@ -46,6 +44,6 @@ function rd_registerAllModules() {
 
 function cls()
 {
-    echo "clear"
-    #clear
+    # echo "clear"
+    clear
 }
