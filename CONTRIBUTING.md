@@ -21,9 +21,6 @@ Any issues deemed to have a negative or arrogant tone will be closed without res
 ## Feature Requests
 If you're requesting a feature, please include a clear description of the feature.
 
-## Branches
-All development will happen from the `develop` branch, since the `main` branch is also the production version for the script.
-
 ## Pull Requests
 If you've identified a feature/bug fix that aligns to the project goals, or even just an addition to the docs, please submit a Pull Request (PR).
 If applicable, include tests and ensure all tests are passing locally before you commit.

@@ -10,9 +10,6 @@
 # License:        MIT License (https://github.com/ofpinewood/retro-dos/master/LICENSE.md)
 #
 
-# set to "1" if we are in development mode
-__development=1
-
 # main retropie install location
 rootdir="/opt/retropie"
 
