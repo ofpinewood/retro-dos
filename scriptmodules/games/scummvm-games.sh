@@ -52,8 +52,8 @@ function run_game_scummvmgames()
         fi
     done
 
-    # ref: https://wiki.scummvm.org/index.php/User_Manual/Appendix:_Command_line_options
-    /opt/retropie/emulators/scummvm/bin/scummvm --fullscreen --aspect-ratio --extrapath="/opt/retropie/emulators/scummvm/extra" --path="$path" $shortname
+    # ref: https://docs.scummvm.org/en/latest/advanced_topics/command_line.html
+    /opt/retropie/emulators/scummvm/bin/scummvm --fullscreen --no-filtering --aspect-ratio --extrapath="/opt/retropie/emulators/scummvm/extra" --path="$path" $shortname
 }
 
 function gui_scummvmgames() {
