@@ -3,7 +3,7 @@
 # This file is part of RetroDos
 #
 # RetroDos front-end for RetroPie
-# RetroDos is a front-end for the RetroPie project. It's a bash script to display menus.
+# RetroDos is a front-end for the RetroPie project. It's a bash script that displays menus.
 #
 # Author:         Peter van den Hout
 # Website:        https://github.com/ofpinewood/retro-dos

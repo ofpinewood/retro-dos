@@ -3,12 +3,14 @@
 # This file is part of RetroDos
 #
 # RetroDos front-end for RetroPie
-# RetroDos is a front-end for the RetroPie project. It's a bash script to display menus.
+# RetroDos is a front-end for the RetroPie project. It's a bash script that displays menus.
 #
 # Author:         Peter van den Hout
 # Website:        https://github.com/ofpinewood/retro-dos
 # License:        MIT License (https://github.com/ofpinewood/retro-dos/master/LICENSE.md)
 #
+
+#[[ "$__debug" -eq 1 ]] && set -x
 
 # main retropie install location
 rootdir="/opt/retropie"
@@ -27,19 +29,13 @@ fi
 
 home="$(eval echo ~$user)"
 datadir="$home/RetroPie"
-biosdir="$datadir/BIOS"
 romdir="$datadir/roms"
-emudir="$rootdir/emulators"
 configdir="$rootdir/configs"
 
-# TODO: check that RetroPie-Setup is installed here
-scriptdir="$home/RetroPie-Setup" #/home/wsl2/RetroPie-Setup
+scriptdir="$(dirname "$0")"
 scriptdir="$(cd "$scriptdir" && pwd)"
 
-rdscriptdir="$(dirname "$0")"
-rdscriptdir="$(cd "$rdscriptdir" && pwd)"
-
-__logdir="$rdscriptdir/logs"
+__logdir="$scriptdir/logs"
 __tmpdir="$scriptdir/tmp"
 __builddir="$__tmpdir/build"
 __swapdir="$__tmpdir"
@@ -52,18 +48,17 @@ fi
 
 __title="RetroDos"
 __version="0.0.1-alpha"
-__version_commit=$(git -C "$rdscriptdir" log -1 --pretty=format:%h)
+__version_commit=$(git -C "$scriptdir" log -1 --pretty=format:%h)
 __version_branch=$(git branch --show-current)
-__version_year=$(git -C "$rdscriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
+__version_year=$(git -C "$scriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
 __author="Of Pine Wood"
 __backtitle="$__title (c) $__version_year $__author $__version"
 
 # using the RetroPie-Setup scriptmodules
 source "$scriptdir/scriptmodules/system.sh"
 source "$scriptdir/scriptmodules/helpers.sh"
-source "$scriptdir/scriptmodules/inifuncs.sh"
+# source "$scriptdir/scriptmodules/inifuncs.sh"
 source "$scriptdir/scriptmodules/packages.sh"
-source "$rdscriptdir/scriptmodules/packages.sh"
 
 setup_env
 

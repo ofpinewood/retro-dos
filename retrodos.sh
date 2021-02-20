@@ -3,7 +3,7 @@
 # This file is part of RetroDos
 #
 # RetroDos front-end for RetroPie
-# RetroDos is a front-end for the RetroPie project. It's a bash script to display menus.
+# RetroDos is a front-end for the RetroPie project. It's a bash script that displays menus.
 #
 # Author:         Peter van den Hout
 # Website:        https://github.com/ofpinewood/retro-dos
@@ -13,7 +13,7 @@
 # set config file
 export DIALOGRC=./config.dialogrc
 
-rdscriptdir="$(dirname "$0")"
-rdscriptdir="$(cd "$rdscriptdir" && pwd)"
+scriptdir="$(dirname "$0")"
+scriptdir="$(cd "$scriptdir" && pwd)"
 
-"$rdscriptdir/retrodos_packages.sh" menu gui
+"$scriptdir/retrodos_packages.sh" menu gui

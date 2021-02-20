@@ -2,18 +2,12 @@
 
 [![License: MIT](https://img.shields.io/github/license/ofpinewood/retro-dos.svg)](https://github.com/ofpinewood/retro-dos/blob/master/LICENSE)
 
-RetroDos is a front-end for the RetroPie project. It's a shell script to display menus, made to resemble a MS-DOS menu.
+RetroDos is a front-end for the RetroPie project. It's a bash script that displays menus.
 
-## Preview
-# TODO: add previews
-
-## Details
-- System, basic, detailed, grid, video and menu views are supported.
-- Support for new "All Games", "Favorites", "Last Played" and "Custom Collections" features in latest version of EmulationStation.
-- Displays rating, description, # of players, genre, publish date & last played metadata on detailed and video views
+![RetroDos screenshot](images/screenshot.png)
 
 ## General Usage
-Shell script to manage your RetroPie installation, using this RetroDos script as the 'graphical' front end.
+RetroDos is a shell script to start your ScummVM games and manage some configuration.
 
 To run the RetroDos script make sure that your APT repositories are up-to-date and that Git is installed:
 
@@ -23,7 +17,7 @@ sudo apt-get dist-upgrade
 sudo apt-get install git
 ```
 
-Then you can download the latest RetroPie setup script with:
+You can then download the latest RetroDos script with:
 
 ``` bash
 cd
@@ -37,14 +31,14 @@ cd retro-dos
 sudo ./retrodos.sh
 ```
 
-When you first run the script it may install some additional packages that are needed.
+> Note: When you first run the script it may install some additional packages that are needed.
 
 ## Development
-All development will happen from the `develop` branch, since the `main` branch is also the production version for the script.
+All development will happen in its own feature branch, since the `main` branch is also the production version for the script.
 
 ``` bash
 cd
-git clone --depth=1 --single-branch --branch develop https://github.com/ofpinewood/retro-dos.git
+git clone --depth=1 --single-branch --branch <feature> https://github.com/ofpinewood/retro-dos.git
 ```
 
 References:
@@ -70,7 +64,6 @@ We accept fixes and features! Here are some resources to help you get started on
 
 ## Acknowledgments
 - [RetroPie-Setup](https://github.com/RetroPie/RetroPie-Setup) for the bash script inspiration.
-- [More Perfect DOS VGA](http://laemeur.sdf.org/fonts) font by [Adam Moore (LÆMEUR)](http://laemeur.sdf.org/).
 
 ---
 Copyright &copy; 2020, [Of Pine Wood](http://ofpinewood.com).

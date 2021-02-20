@@ -3,7 +3,7 @@
 # This file is part of RetroDos
 #
 # RetroDos front-end for RetroPie
-# RetroDos is a front-end for the RetroPie project. It's a bash script to display menus.
+# RetroDos is a front-end for the RetroPie project. It's a bash script that displays menus.
 #
 # Author:         Peter van den Hout
 # Website:        https://github.com/ofpinewood/retro-dos
@@ -22,7 +22,7 @@ function depends_bootscreen() {
 }
 
 function default_bootscreen() {
-    echo "$rdscriptdir/splashscreens/msdos-1024x768-loading.png" >/etc/splashscreen.list
+    echo "$scriptdir/splashscreens/msdos-1024x768-loading.png" >/etc/splashscreen.list
 }
 
 function set_bootscreen() {
@@ -55,6 +55,32 @@ function preview_bootscreen() {
     done
 }
 
+function choose_splashscreen() {
+    local path="$1"
+    local type="$2"
+
+    local regex
+    [[ "$type" == "image" ]] && regex=$(_image_exts_splashscreen)
+    [[ "$type" == "video" ]] && regex=$(_video_exts_splashscreen)
+
+    local options=()
+    local i=0
+    while read splashdir; do
+        splashdir=${splashdir/$path\//}
+        if echo "$splashdir" | grep -q "$regex"; then
+            options+=("$i" "$splashdir")
+            ((i++))
+        fi
+    done < <(find "$path" -type f ! -regex ".*/\..*" ! -regex ".*LICENSE" ! -regex ".*README.*" ! -regex ".*\.sh"  ! -regex ".*\.pkg" | sort)
+    if [[ "${#options[@]}" -eq 0 ]]; then
+        printMsgs "dialog" "There are no splashscreens installed in $path"
+        return
+    fi
+    local cmd=(dialog --backtitle "$__backtitle" --menu "Choose splashscreen." 22 76 16)
+    local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    [[ -n "$choice" ]] && echo "$path/${options[choice*2+1]}"
+}
+
 function choose_path_bootscreen() {
     local options=(
         1 "RetroDos splashscreens" "RetroDos splashscreens"
@@ -65,7 +91,7 @@ function choose_path_bootscreen() {
     local cmd=(dialog --backtitle "$__backtitle" --title "Preview splashscreens" --cancel-label "Back" --item-help --menu "Choose an option." 22 86 16)
 
     local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
-    [[ "$choice" -eq 1 ]] && echo "$rdscriptdir/splashscreens"
+    [[ "$choice" -eq 1 ]] && echo "$scriptdir/splashscreens"
     [[ "$choice" -eq 2 ]] && echo "$md_inst"
     [[ "$choice" -eq 3 ]] && echo "$datadir/splashscreens"
 }
