@@ -49,7 +49,6 @@ fi
 __title="RetroDos"
 __version="0.0.1-alpha"
 __version_commit=$(git -C "$scriptdir" log -1 --pretty=format:%h)
-__version_branch=$(git branch --show-current)
 __version_year=$(git -C "$scriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
 __author="Of Pine Wood"
 __backtitle="$__title (c) $__version_year $__author $__version"

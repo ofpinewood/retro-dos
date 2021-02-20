@@ -188,7 +188,7 @@ function gui_menu() {
         options+=(R "Reboot" "R Reboot your machine.")
         options+=(X "Shutdown" "X Shutdown your machine.")
 
-        cmd=(dialog --backtitle "$__backtitle" --title "$__title" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version ($__version_branch)\nLast Commit: $commit\nSystem: $__platform ($__platform_arch) $__os_desc" 22 76 16)
+        cmd=(dialog --backtitle "$__backtitle" --title "$__title" --cancel-label "Exit" --item-help --help-button --default-item "$default" --menu "Version: $__version\nLast Commit: $commit\nSystem: $__platform ($__platform_arch) $__os_desc" 22 76 16)
 
         choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         [[ -z "$choice" ]] && break
