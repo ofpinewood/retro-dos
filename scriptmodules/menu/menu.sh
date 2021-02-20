@@ -113,7 +113,7 @@ function reboot_menu()
 function shutdown_menu()
 {
     cls
-    shutdown now
+    shutdown -h now
 }
 
 function config_gui_menu() {
