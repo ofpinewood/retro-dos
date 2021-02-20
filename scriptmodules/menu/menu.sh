@@ -218,7 +218,7 @@ function gui_menu() {
                 ;;
             X)
                 dialog --defaultno --yesno "Are you sure you want to shutdown?" 22 76 2>&1 >/dev/tty || continue
-                showdown_menu
+                shutdown_menu
                 ;;
             *)
                 local logfilename
