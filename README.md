@@ -34,11 +34,11 @@ sudo ./retrodos.sh
 > Note: When you first run the script it may install some additional packages that are needed.
 
 ## Development
-All development will happen from the `develop` branch, since the `main` branch is also the production version for the script.
+All development will happen in its own feature branch, since the `main` branch is also the production version for the script.
 
 ``` bash
 cd
-git clone --depth=1 --single-branch --branch develop https://github.com/ofpinewood/retro-dos.git
+git clone --depth=1 --single-branch --branch <feature> https://github.com/ofpinewood/retro-dos.git
 ```
 
 References:
