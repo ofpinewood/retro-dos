@@ -17,9 +17,9 @@
 
 # function depends_msdosfont() {
 #     mkdir -p "/usr/share/fonts/truetype/msdos" >/dev/null
-#     cp "$rdscriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf" >/dev/null
-#     cp "$rdscriptdir/fonts/LessPerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/LessPerfectDOSVGA.ttf" >/dev/null
-#     cp "$rdscriptdir/fonts/Lobster-Regular.ttf" "/usr/share/fonts/truetype/msdos/Lobster-Regular.ttf" >/dev/null
+#     cp "$scriptdir/fonts/MorePerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/MorePerfectDOSVGA.ttf" >/dev/null
+#     cp "$scriptdir/fonts/LessPerfectDOSVGA.ttf" "/usr/share/fonts/truetype/msdos/LessPerfectDOSVGA.ttf" >/dev/null
+#     cp "$scriptdir/fonts/Lobster-Regular.ttf" "/usr/share/fonts/truetype/msdos/Lobster-Regular.ttf" >/dev/null
 #     fc-cache -f -v >/dev/null
 # }
 

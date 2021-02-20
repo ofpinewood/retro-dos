@@ -3,7 +3,7 @@
 # This file is part of RetroDos
 #
 # RetroDos front-end for RetroPie
-# RetroDos is a front-end for the RetroPie project. It's a bash script to display menus.
+# RetroDos is a front-end for the RetroPie project. It's a bash script that displays menus.
 #
 # Author:         Peter van den Hout
 # Website:        https://github.com/ofpinewood/retro-dos
@@ -15,7 +15,7 @@ rp_module_desc="ScummVM Games"
 rp_module_section="games"
 
 scummvmgames_romdir="$romdir/scummvm/"
-#scummvmgames_romdir="$rdscriptdir/data/roms/scummvm/"
+#scummvmgames_romdir="$scriptdir/data/roms/scummvm/"
 
 function depends_scummvmgames()
 {
