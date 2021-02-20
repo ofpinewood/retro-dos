@@ -285,6 +285,15 @@ function aptInstall() {
     return $?
 }
 
+## @fn aptRemove()
+## @param packages package / space separated list of packages to install
+## @brief Calls apt-get remove with the packages provided.
+function aptRemove() {
+    aptUpdate
+    apt-get remove -y "$@"
+    return $?
+}
+
 ## @fn compareVersions()
 ## @param version first version to compare
 ## @param operator operator to use (lt le eq ne ge gt)
