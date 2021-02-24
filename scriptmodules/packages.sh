@@ -399,6 +399,13 @@ function rp_getInstallPath() {
     echo "$rootdir/${__mod_type[$id]}/$id"
 }
 
+function rp_isInstalled() {
+    local id="$1"
+    local md_inst="$rootdir/${__mod_type[$id]}/$id"
+    [[ -d "$md_inst" ]] && return 0
+    return 1
+}
+
 function cls()
 {
     # echo "clear"
