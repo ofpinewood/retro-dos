@@ -35,7 +35,7 @@ function depends_scummvmgames()
             scummvmgames_path["$idx"]="$path"
             ((idx++))
         fi
-    done < <(find "$scummvmgames_romdir" -maxdepth 1 -mindepth 1 -type d -print0)
+    done < <(find "$scummvmgames_romdir" -maxdepth 1 -mindepth 1 -type d -print0 | sort -z)
 }
 
 function run_game_scummvmgames()
