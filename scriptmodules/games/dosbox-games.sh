@@ -49,33 +49,8 @@ function run_game_dosboxgames()
 
     # ref: https://www.dosbox.com/DOSBoxManual.html
     # ref: https://retropie.org.uk/docs/PC/
-    # fullscreen stuff: https://retropie.org.uk/forum/topic/25178/dosbox-on-pi-4-game-window-is-fullscreen-but-not-centered-on-screen/97?_=1614883985849&lang=en-US
-    # Compatibility: https://www.dosbox.com/comp_list.php
-    midi_synth start
-    XINIT:bash /opt/retropie/emulators/dosbox/bin/dosbox -userconf -conf "${dosboxgames_conf[$idx]}" -c "mount c ${dosboxgames_path[$idx]}" -c "c:" -c "${dosboxgames_cmd[$idx]}" -c "exit"
-    midi_synth stop
+    /opt/retropie/emulators/dosbox/bin/dosbox -userconf -conf "${dosboxgames_conf[$idx]}" -c "mount c ${dosboxgames_path[$idx]}" -c "c:" -c "${dosboxgames_cmd[$idx]}" -c "exit"
 }
-
-function midi_synth() {
-    [[ "$needs_synth" != "1" ]] && return
-
-    case "$1" in
-        "start")
-            timidity -Os -iAD &
-            i=0
-            until [[ -n "$(aconnect -o | grep TiMidity)" || "$i" -ge 10 ]]; do
-                sleep 1
-                ((i++))
-            done
-            ;;
-        "stop")
-            killall timidity
-            ;;
-        *)
-            ;;
-    esac
-}
-
 
 function gui_dosboxgames() {
     while true; do

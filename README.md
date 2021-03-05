@@ -56,6 +56,55 @@ Make script files executable before checking them in.
 git update-index --chmod=+x scriptmodules/<script>.sh;
 ```
 
+### DosBox-Staging
+DOSBox Staging is an attempt to revitalize DOSBox's development process. It's not a rewrite, but a continuation and improvement on the existing DOSBox codebase while leveraging modern development tools and practices.
+
+> https://github.com/dosbox-staging/dosbox-staging/wiki/retropie-integration  
+> Fullscreen stuff: https://retropie.org.uk/forum/topic/25178/dosbox-on-pi-4-game-window-is-fullscreen-but-not-centered-on-screen/97?_=1614883985849&lang=en-US  
+> PI4+DosBox: https://retropie.org.uk/forum/topic/25041/dosbox-official-thread  
+> Compatibility: https://www.dosbox.com/comp_list.php  
+
+#### Configuration
+```
+[sdl]
+fullscreen       = true
+fulldouble       = false
+fullresolution   = desktop
+windowresolution = original
+output           = openglnb
+autolock         = true
+sensitivity      = 100
+waitonerror      = true
+priority         = higher,normal
+mapperfile       = mapper-SVN.map
+usescancodes     = false
+
+[dosbox]
+language = 
+machine  = svga_s3
+captures = capture
+memsize  = 16
+
+[render]
+frameskip = 0
+aspect    = true
+scaler    = normal3x
+```
+
+> References  
+> - https://wiki.learnlinux.tv/index.php/Running_Classic_MS-DOS_games_on_the_Pi_400
+> - https://www.dosbox.com/wiki/Dosbox.conf
+
+##### OpenGL (output=openglnb)
+Uses OpenGL. Does not use bilinear filtering so pixels are pixelated.
+
+#### Turn on dispmanx
+One option to fix tearing is to turn on `dispmanx` in RetroPie setup. It does fix tearing yet it decreases performance in few games (eg. Alone in the Dark, Wolf3D, Crusader, etc).
+
+```
+RetroPie-Setup -> Configuration / Tools -> dispmanx // switch it on for DOSBOX
+```
+
 ## Contributing
 We accept fixes and features! Here are some resources to help you get started on how to contribute code or new content.
 
