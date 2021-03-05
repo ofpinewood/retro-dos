@@ -88,7 +88,9 @@ aspect    = true
 scaler    = normal3x
 ```
 
-> Ref: https://wiki.learnlinux.tv/index.php/Running_Classic_MS-DOS_games_on_the_Pi_400
+> References  
+> - https://wiki.learnlinux.tv/index.php/Running_Classic_MS-DOS_games_on_the_Pi_400
+> - https://www.dosbox.com/wiki/Dosbox.conf
 
 ##### OpenGL (output=openglnb)
 Uses OpenGL. Does not use bilinear filtering so pixels are pixelated.
