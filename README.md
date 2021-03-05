@@ -56,6 +56,11 @@ Make script files executable before checking them in.
 git update-index --chmod=+x scriptmodules/<script>.sh;
 ```
 
+### DosBox
+Fullscreen stuff: https://retropie.org.uk/forum/topic/25178/dosbox-on-pi-4-game-window-is-fullscreen-but-not-centered-on-screen/97?_=1614883985849&lang=en-US  
+PI4+DosBox: https://retropie.org.uk/forum/topic/25041/dosbox-official-thread  
+Compatibility: https://www.dosbox.com/comp_list.php  
+
 ## Contributing
 We accept fixes and features! Here are some resources to help you get started on how to contribute code or new content.
 
