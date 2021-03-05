@@ -61,6 +61,45 @@ Fullscreen stuff: https://retropie.org.uk/forum/topic/25178/dosbox-on-pi-4-game-
 PI4+DosBox: https://retropie.org.uk/forum/topic/25041/dosbox-official-thread  
 Compatibility: https://www.dosbox.com/comp_list.php  
 
+#### Configuration
+```
+[sdl]
+fullscreen       = true
+fulldouble       = false
+fullresolution   = desktop
+windowresolution = original
+output           = openglnb
+autolock         = true
+sensitivity      = 100
+waitonerror      = true
+priority         = higher,normal
+mapperfile       = mapper-SVN.map
+usescancodes     = false
+
+[dosbox]
+language = 
+machine  = svga_s3
+captures = capture
+memsize  = 16
+
+[render]
+frameskip = 0
+aspect    = true
+scaler    = normal3x
+```
+
+> Ref: https://wiki.learnlinux.tv/index.php/Running_Classic_MS-DOS_games_on_the_Pi_400
+
+##### OpenGL (output=openglnb)
+Uses OpenGL. Does not use bilinear filtering so pixels are pixelated.
+
+#### Turn on dispmanx
+One option to fix tearing is to turn on `dispmanx` in RetroPie setup. It does fix tearing yet it decreases performance in few games (eg. Alone in the Dark, Wolf3D, Crusader, etc).
+
+```
+RetroPie-Setup -> Configuration / Tools -> dispmanx // switch it on for DOSBOX
+```
+
 ## Contributing
 We accept fixes and features! Here are some resources to help you get started on how to contribute code or new content.
 
