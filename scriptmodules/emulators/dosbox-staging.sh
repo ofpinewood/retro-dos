@@ -17,20 +17,19 @@
 #
 
 rp_module_id="dosbox-staging"
-rp_module_desc="DOS emulator (enhanced and modern DosBox fork)"
+rp_module_desc="DosBox-staging (enhanced and modern DosBox fork)"
 rp_module_help="ROM Extensions: .bat .com .exe .sh .conf\n\nCopy your DOS games to $romdir/pc"
 rp_module_licence="GPL2 https://github.com/dosbox-staging/dosbox-staging/blob/master/COPYING"
-# rp_module_repo="git https://github.com/dosbox-staging/dosbox-staging.git master"
-# experimental for Pi4 only
-rp_module_repo="git https://github.com/dosbox-staging/dosbox-staging.git kc/fps-pacing-1"
-rp_module_section="exp"
+rp_module_section="emulators"
 
 function depends_dosbox-staging() {
     getDepends ccache build-essential meson ninja-build libasound2-dev libpng-dev libsdl2-dev libsdl2-net-dev libopusfile-dev libfluidsynth-dev
 }
 
 function sources_dosbox-staging() {
-    gitPullOrClone
+    # gitPullOrClone "$md_build" https://github.com/dosbox-staging/dosbox-staging.git master
+    # experimental for Pi4 only
+    gitPullOrClone "$md_build" https://github.com/dosbox-staging/dosbox-staging.git kc/fps-pacing-1
 }
 
 function build_dosbox-staging() {
@@ -99,6 +98,7 @@ _EOF_
                 iniSet "fullscreen" "true"
                 iniSet "fullresolution" "desktop"
                 iniSet "output" "texturenb"
+                iniSet "texture_renderer" "opengles2"
                 iniSet "cycles" "25000"
         fi
     fi

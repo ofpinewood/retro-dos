@@ -124,12 +124,63 @@ function config_gui_menu() {
         local idx
 
         for id in "${__mod_id[@]}"; do
-            if [[ "${__mod_section[$id]}" == "config" ]] || rp_isInstalled "$id" && fnExists "gui_$id"; then
-                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "$id ${__mod_idx[$id]} ${__mod_desc[$id]}")
+            if [[ "${__mod_section[$id]}" == "config" ]] || rp_isInstalled "$id"; then
+                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "${__mod_idx[$id]} ${__mod_desc[$id]}")
             fi
         done
 
         local cmd=(dialog --backtitle "$__backtitle" --title "Configuration / Tools" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "This menu contains configuration and tools for RetroDos and from the RetroPie-Setup script." 22 76 16)
+
+        local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+        [[ -z "$choice" ]] && break
+        if [[ "${choice[@]:0:4}" == "HELP" ]]; then
+            choice="${choice[@]:5}"
+            default="${choice/%\ */}"
+            choice="${choice#* }"
+            printMsgs "dialog" "$choice"
+            continue
+        fi
+
+        [[ -z "$choice" ]] && break
+
+        default="$choice"
+
+        case "$choice" in
+            *)
+                local logfilename
+                rps_logInit
+                {
+                    rps_logStart
+                    id="${__mod_id[$choice]}"
+                    if fnExists "gui_$id"; then
+                        rp_callModule "$id" depends
+                        rp_callModule "$id" gui
+                    else
+                        rp_callModule "$id" clean
+                        rp_callModule "$id"
+                    fi
+                    rps_logEnd
+                } &> >(_menu_gzip_log "$logfilename")
+                rps_printInfo "$logfilename"
+                ;;
+        esac
+    done
+}
+
+function emulators_gui_menu() {
+    local default
+
+    while true; do
+        local options=()
+        local idx
+
+        for id in "${__mod_id[@]}"; do
+            if [[ "${__mod_section[$id]}" == "emulators" ]] || rp_isInstalled "$id"; then
+                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "${__mod_idx[$id]} ${__mod_desc[$id]}")
+            fi
+        done
+
+        local cmd=(dialog --backtitle "$__backtitle" --title "Emulators" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "This menu contains configuration for emulators." 22 76 16)
 
         local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         [[ -z "$choice" ]] && break
@@ -179,11 +230,12 @@ function gui_menu() {
 
         for id in "${__mod_id[@]}"; do
             if [[ "${__mod_section[$id]}" == "games" ]] && fnExists "gui_$id"; then
-                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "$id ${__mod_idx[$id]} ${__mod_desc[$id]}")
+                options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "${__mod_idx[$id]} ${__mod_desc[$id]}")
             fi
         done
 
         options+=(C "Configuration / Tools" "C Configuration and tools.")
+        options+=(E "Emulators" "E Emulators.")
         options+=(U "Update RetroDos script" "U Update RetroDos script. This will update this main management script only, but will not update any software packages. To update packages use the 'Update' option from the main menu, which will also update the RetroDos script.")
         options+=(R "Reboot" "R Reboot your machine.")
         options+=(X "Shutdown" "X Shutdown your machine.")
@@ -205,6 +257,9 @@ function gui_menu() {
         case "$choice" in
             C)
                 config_gui_menu
+                ;;
+            E)
+                emulators_gui_menu
                 ;;
             U)
                 dialog --defaultno --yesno "Are you sure you want to update the RetroDos script?" 22 76 2>&1 >/dev/tty || continue

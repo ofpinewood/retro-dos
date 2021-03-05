@@ -30,12 +30,12 @@ function rd_registerAllModules() {
     declare -Ag __mod_section=()
     declare -Ag __mod_flags=()
 
-    # rp_registerModuleDir "emulators"
     # rp_registerModuleDir "libretrocores"
     # rp_registerModuleDir "ports"
 
     rp_registerModuleDir "menu"
     rp_registerModuleDir "config"
+    rp_registerModuleDir "emulators"
     rp_registerModuleDir "games"
 
     # rp_registerModuleDir "supplementary"
@@ -404,6 +404,59 @@ function rp_isInstalled() {
     local md_inst="$rootdir/${__mod_type[$id]}/$id"
     [[ -d "$md_inst" ]] && return 0
     return 1
+}
+
+function rp_hasModule() {
+    local id="$1"
+    [[ -n "${__mod_type[$id]}" ]] && return 0
+    return 1
+}
+
+# this is a basic / temporary fix to record the source of a package when updating (binary vs source)
+# packaging will be overhauled at a later date
+function rp_setPackageInfo() {
+    local id="$1"
+    local install_path="$(rp_getInstallPath $id)"
+    [[ ! -d "$install_path" ]] && return 1
+    local pkg="$install_path/retropie.pkg"
+    local origin="$2"
+
+    iniConfig "=" '"' "$pkg"
+    iniSet "pkg_origin" "$origin"
+    local pkg_date
+    if [[ "$origin" == "binary" ]]; then
+        pkg_date="$(rp_getBinaryDate $id)"
+    else
+        pkg_date="$(date)"
+    fi
+    iniSet "pkg_date" "$pkg_date"
+}
+
+function rp_getBinaryDate() {
+    local id="$1"
+    local url="$(rp_getBinaryUrl $id)"
+    [[ -z "$url" || "$url" == "notest" ]] && return 1
+
+    local bin_date=$(wget \
+        --server-response --spider -q \
+        "$url" 2>&1 \
+        | grep -i "Last-Modified" \
+        | cut -d" " -f4-)
+    echo "$bin_date"
+    return 0
+}
+
+function rp_getBinaryUrl() {
+    local id="$1"
+    local url="$__binary_url/${__mod_type[$id]}/$id.tar.gz"
+    if fnExists "install_bin_${id}"; then
+        if fnExists "__binary_url_${id}"; then
+            url="$(__binary_url_${id})"
+        else
+            url="notest"
+        fi
+    fi
+    echo "$url"
 }
 
 function cls()

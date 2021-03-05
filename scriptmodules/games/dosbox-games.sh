@@ -11,32 +11,28 @@
 #
 
 rp_module_id="dosboxgames"
-rp_module_desc="DosBox Games"
+rp_module_desc="DOSBox Games"
 rp_module_section="games"
 
 dosboxgames_romdir="$romdir/pc/"
-
-[[ ! -n "$(aconnect -o | grep -e TiMidity -e FluidSynth)" ]] && needs_synth="1"
+#dosboxgames_conf="$home/.config/dosbox/dosbox-staging-git.conf"
 
 function depends_dosboxgames()
 {
     dosboxgames_idx=()
     dosboxgames_conf=()
     dosboxgames_name=()
-    dosboxgames_cmd=()
     dosboxgames_path=()
 
     local idx=0
     while IFS= read -d $'\0' -r path ; do
         local folder="${path##*/}"
         local conf="$path/dosbox.conf"
-        local name=$(<"$path/dosbox.name")
-        local cmd=$(<"$path/dosbox.cmd")
+        local name="$folder"
         if [ -n "$name" ]; then
             dosboxgames_idx+=("$idx")
             dosboxgames_conf["$idx"]="$conf"
             dosboxgames_name["$idx"]="$name"
-            dosboxgames_cmd["$idx"]="$cmd"
             dosboxgames_path["$idx"]="$path"
             ((idx++))
         fi
@@ -49,19 +45,41 @@ function run_game_dosboxgames()
 
     # ref: https://www.dosbox.com/DOSBoxManual.html
     # ref: https://retropie.org.uk/docs/PC/
-    /opt/retropie/emulators/dosbox/bin/dosbox -userconf -conf "${dosboxgames_conf[$idx]}" -c "mount c ${dosboxgames_path[$idx]}" -c "c:" -c "${dosboxgames_cmd[$idx]}" -c "exit"
+
+    # MT-32 Munt library
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/retropie/emulators/dosbox-staging"
+
+    local conf="${dosboxgames_conf[$idx]}"
+    if [ -n "$conf" ]; then
+        /opt/retropie/emulators/dosbox-staging/dosbox -userconf -conf "$conf" -exit
+    else
+        /opt/retropie/emulators/dosbox-staging/dosbox "${dosboxgames_path[$idx]}" -exit
+    fi
+}
+
+function run_dosbox_dosboxgames()
+{
+    # ref: https://www.dosbox.com/DOSBoxManual.html
+    # ref: https://retropie.org.uk/docs/PC/
+
+    # MT-32 Munt library
+    export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/opt/retropie/emulators/dosbox-staging"
+
+    /opt/retropie/emulators/dosbox-staging/dosbox "$dosboxgames_romdir" -c "c:"
 }
 
 function gui_dosboxgames() {
     while true; do
         local options=()
 
+        options+=(D "DOSBox" "D DOSBox.")
+
         local idx
         for idx in "${dosboxgames_idx[@]}"; do
             options+=("${idx}" "${dosboxgames_name[$idx]}" "${idx} ${dosboxgames_name[$idx]}")
         done
 
-        local cmd=(dialog --backtitle "$__backtitle" --title "DosBox Games" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "Start a game" 22 76 16)
+        local cmd=(dialog --backtitle "$__backtitle" --title "DOSBox Games" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "Start a game" 22 76 16)
 
         local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         [[ -z "$choice" ]] && break
@@ -79,6 +97,9 @@ function gui_dosboxgames() {
 
         if [[ -n "$choice" ]]; then
             case "$choice" in
+                D)
+                    run_dosbox_dosboxgames
+                    ;;
                 *)
                     run_game_dosboxgames "$choice"
                     ;;

@@ -29,7 +29,9 @@ fi
 
 home="$(eval echo ~$user)"
 datadir="$home/RetroPie"
+biosdir="$datadir/BIOS"
 romdir="$datadir/roms"
+emudir="$rootdir/emulators"
 configdir="$rootdir/configs"
 
 scriptdir="$(dirname "$0")"
@@ -47,16 +49,16 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 __title="RetroDos"
-__version="1.1.0"
+__version="0.4"
 __version_commit=$(git -C "$scriptdir" log -1 --pretty=format:%h)
 __version_year=$(git -C "$scriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
 __author="Of Pine Wood"
-__backtitle="$__title (c) $__version_year $__author $__version"
+__backtitle="$__title $__version (c) $__version_year $__author"
 
 # using the RetroPie-Setup scriptmodules
 source "$scriptdir/scriptmodules/system.sh"
 source "$scriptdir/scriptmodules/helpers.sh"
-# source "$scriptdir/scriptmodules/inifuncs.sh"
+source "$scriptdir/scriptmodules/inifuncs.sh"
 source "$scriptdir/scriptmodules/packages.sh"
 
 setup_env
