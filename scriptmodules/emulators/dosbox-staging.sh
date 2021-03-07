@@ -23,11 +23,11 @@ rp_module_licence="GPL2 https://github.com/dosbox-staging/dosbox-staging/blob/ma
 rp_module_section="emulators"
 
 function depends_dosbox-staging() {
-    getDepends ccache build-essential meson ninja-build libasound2-dev libpng-dev libsdl2-dev libsdl2-net-dev libopusfile-dev libfluidsynth-dev
+    getDepends ccache build-essential meson ninja-build libasound2-dev libpng-dev libsdl2-dev libsdl2-net-dev libopusfile-dev libfluidsynth-dev fluid-soundfont-gm
 }
 
 function sources_dosbox-staging() {
-    # gitPullOrClone "$md_build" https://github.com/dosbox-staging/dosbox-staging.git master
+    #gitPullOrClone "$md_build" https://github.com/dosbox-staging/dosbox-staging.git master
     # experimental for Pi4 only
     gitPullOrClone "$md_build" https://github.com/dosbox-staging/dosbox-staging.git kc/fps-pacing-1
 }
@@ -97,9 +97,10 @@ _EOF_
                 iniConfig "=" "" "$config_path"
                 iniSet "fullscreen" "true"
                 iniSet "fullresolution" "desktop"
-                iniSet "output" "texturenb"
-                iniSet "texture_renderer" "opengles2"
-                iniSet "cycles" "25000"
+                # iniSet "output" "texturenb"
+                # iniSet "texture_renderer" "opengles2"
+                # iniSet "cycles" "25000"
+                iniSet "soundfont" "/usr/share/sounds/sf2/FluidR3_GM.sf2"
         fi
     fi
 

@@ -54,12 +54,19 @@ function run_game_scummvmgames()
 
     # ref: https://docs.scummvm.org/en/latest/advanced_topics/command_line.html
     # ref: https://scumm-thedocs.readthedocs.io/en/latest/advanced/command_line.html
-    /opt/retropie/emulators/scummvm/bin/scummvm --gfx-mode=1x --no-filtering --aspect-ratio --fullscreen --music-volume=144 --sfx-volume=168 --extrapath="/opt/retropie/emulators/scummvm/extra" --path="$path" $shortname
+    /opt/retropie/emulators/scummvm/bin/scummvm --gfx-mode=1x --no-filtering --aspect-ratio --fullscreen --music-volume=144 --sfx-volume=168 --extrapath="/root/.config/scummvm/extra" --path="$path" $shortname
+}
+
+function run_scummvm_scummvmgames()
+{
+    /opt/retropie/emulators/scummvm/bin/scummvm
 }
 
 function gui_scummvmgames() {
     while true; do
         local options=()
+
+        options+=(S "ScummVM" "S ScummVM.")
 
         local idx
         for idx in "${scummvmgames_idx[@]}"; do
@@ -84,6 +91,9 @@ function gui_scummvmgames() {
 
         if [[ -n "$choice" ]]; then
             case "$choice" in
+                S)
+                    run_scummvm_scummvmgames
+                    ;;
                 *)
                     run_game_scummvmgames "$choice"
                     ;;

@@ -124,7 +124,7 @@ function config_gui_menu() {
         local idx
 
         for id in "${__mod_id[@]}"; do
-            if [[ "${__mod_section[$id]}" == "config" ]] || rp_isInstalled "$id"; then
+            if [[ "${__mod_section[$id]}" == "config" ]]; then
                 options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "${__mod_idx[$id]} ${__mod_desc[$id]}")
             fi
         done
@@ -175,7 +175,7 @@ function emulators_gui_menu() {
         local idx
 
         for id in "${__mod_id[@]}"; do
-            if [[ "${__mod_section[$id]}" == "emulators" ]] || rp_isInstalled "$id"; then
+            if [[ "${__mod_section[$id]}" == "emulators" ]]; then
                 options+=("${__mod_idx[$id]}" "${__mod_desc[$id]}" "${__mod_idx[$id]} ${__mod_desc[$id]}")
             fi
         done

@@ -57,10 +57,11 @@ git update-index --chmod=+x scriptmodules/<script>.sh;
 ```
 
 ## Configuration
-Configuration settings for my `Macintosh Classic II`-mod running RetroPie.
+Setup and configuration for my `Macintosh Classic II`-mod running RetroPie.
 
-- [RetroPie](https://github.com/ofpinewood/retro-dos/docs/retropie-config.md)
+- [RetroPie setup](https://github.com/ofpinewood/retro-dos/docs/retropie-setup.md)
 - [DOSBox](https://github.com/ofpinewood/retro-dos/docs/dosbox.md)
+- [ScummVM](https://github.com/ofpinewood/retro-dos/docs/scummvm.md)
 
 ## Contributing
 We accept fixes and features! Here are some resources to help you get started on how to contribute code or new content.

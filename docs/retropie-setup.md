@@ -1,5 +1,13 @@
-# RetroPie Configuration
-These configuration settings are for my `Macintosh Classic II` running RetroPie.
+# RetroPie setup
+These settings are for my `Macintosh Classic II` running RetroPie.
+
+## Setup WIFI
+
+## Enable SFTP
+
+### Enable Root access
+
+## Boot into shell
 
 ## Overscan
 Overscan settings are set in the `/boot/config.txt`. Make sure the top+bottom and left+right are a multiple of 8 to avoid scaling issues (blurred text and images).

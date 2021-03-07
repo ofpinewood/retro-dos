@@ -109,7 +109,7 @@ function gui_bootscreen() {
         options+=(P "Preview splashscreens" "Preview splashscreens")
         options+=(C "Choose splashscreen" "Choose splashscreen")
 
-        local cmd=(dialog --backtitle "$__backtitle" --title "Configure the RetroDos splashscreen" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "Configure the RetroDos splashscreen, to configure more splashscreen options use the splashscreen module (839)." 22 76 16)
+        local cmd=(dialog --backtitle "$__backtitle" --title "Configure the RetroDos splashscreen" --cancel-label "Back" --item-help --help-button --default-item "$default" --menu "Configure the RetroDos splashscreen." 22 76 16)
 
         local choice=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
         [[ -z "$choice" ]] && break
