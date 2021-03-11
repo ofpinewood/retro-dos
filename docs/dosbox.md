@@ -24,7 +24,7 @@ output           = texturenb
 texture_renderer = opengles2
 
 [cpu]
-cycles    = auto
+cycles    = fixed 25000
 ```
 
 To run a game (or a program) with a specific config, simply type in the following command:
