@@ -65,6 +65,8 @@ After installing the soundfonts update the `root/.config/dosbox/dosbox-staging-g
 ``` txt
 [fluidsynth]
 soundfont = /usr/share/sounds/sf2/FluidR3_GM.sf2
+# MT32 (CM64-L / LAPC-1) Hedsound version Soundfont sf2
+#soundfont = /usr/share/sounds/sf2/MT-32-32K-v1-r65-Full-Hedsound.sf2
 ```
 
 ### MT32
