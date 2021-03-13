@@ -44,3 +44,5 @@ versioninfo=2.2.0
 speech_mute=false
 enable_gs=false
 ```
+
+> [ScummVM Roland MT-32 General MIDI Tutorial](https://youtu.be/-356nSg6brA)
