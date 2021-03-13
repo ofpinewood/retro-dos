@@ -275,23 +275,35 @@ function gui_menu() {
                 dialog --defaultno --yesno "Are you sure you want to shutdown?" 22 76 2>&1 >/dev/tty || continue
                 shutdown_menu
                 ;;
+            # run without logging
             *)
-                local logfilename
-                rps_logInit
-                {
-                    rps_logStart
-                    id="${__mod_id[$choice]}"
-                    if fnExists "gui_$id"; then
-                        rp_callModule "$id" depends
-                        rp_callModule "$id" gui
-                    else
-                        rp_callModule "$id" clean
-                        rp_callModule "$id"
-                    fi
-                    rps_logEnd
-                } &> >(_menu_gzip_log "$logfilename")
-                rps_printInfo "$logfilename"
+                id="${__mod_id[$choice]}"
+                if fnExists "gui_$id"; then
+                    rp_callModule "$id" depends
+                    rp_callModule "$id" gui
+                else
+                    rp_callModule "$id" clean
+                    rp_callModule "$id"
+                fi
                 ;;
+            # to run with logging use the following code
+            # *)
+            #     local logfilename
+            #     rps_logInit
+            #     {
+            #         rps_logStart
+            #         id="${__mod_id[$choice]}"
+            #         if fnExists "gui_$id"; then
+            #             rp_callModule "$id" depends
+            #             rp_callModule "$id" gui
+            #         else
+            #             rp_callModule "$id" clean
+            #             rp_callModule "$id"
+            #         fi
+            #         rps_logEnd
+            #     } &> >(_menu_gzip_log "$logfilename")
+            #     rps_printInfo "$logfilename"
+            #     ;;
         esac
     done
     cls
