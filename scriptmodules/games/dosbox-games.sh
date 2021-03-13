@@ -51,7 +51,7 @@ function run_game_dosboxgames()
 
     local conf="${dosboxgames_conf[$idx]}"
     if [ -n "$conf" ]; then
-        /opt/retropie/emulators/dosbox-staging/dosbox "${dosboxgames_path[$idx]}" -userconf -conf "$conf" -exit
+        /opt/retropie/emulators/dosbox-staging/dosbox -userconf -conf "$conf" -exit
     else
         /opt/retropie/emulators/dosbox-staging/dosbox "${dosboxgames_path[$idx]}" -exit
     fi

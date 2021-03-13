@@ -49,7 +49,7 @@ if [[ "$(id -u)" -ne 0 ]]; then
 fi
 
 __title="RetroDos"
-__version="0.51"
+__version="0.52"
 __version_commit=$(git -C "$scriptdir" log -1 --pretty=format:%h)
 __version_year=$(git -C "$scriptdir" log -1 --date=format:'%Y' --pretty=format:%cd)
 __author="Of Pine Wood"
